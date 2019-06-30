@@ -1,5 +1,6 @@
 import java.util.List;
 import no.uib.cipr.matrix.DenseMatrix;
+import no.uib.cipr.matrix.NotConvergedException;
 import no.uib.cipr.matrix.SVD;
 import org.biojava.nbio.structure.Chain;
 import org.biojava.nbio.structure.Structure;
@@ -59,15 +60,13 @@ public class GaussianNetworkModel extends BaseNM implements NormalModeAnalysis {
     }
 
 
-    public void calculateModes() {
+    public void calculateModes() throws NotConvergedException {
 
         int n = this.coordinates.length;
         SVD svd = new SVD(this.KirchhoffMatrix.numRows(),
                 this.KirchhoffMatrix.numColumns(), true);
-//        SingularValueDecomposition svd = 
-//                new SingularValueDecomposition(this.KirchhoffMatrix);
+        svd.factor(this.KirchhoffMatrix);
         DenseMatrix eigvec = svd.getU();
-//        this.eigenValueMatrix = svd.getS();
         double[] eig = svd.getS();
         double[] eigenvalues = new double[eig.length-1];
         int j = 0;
